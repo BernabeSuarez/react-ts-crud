@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 type FormElement = React.FormEvent<HTMLFormElement>;
 
@@ -10,19 +10,31 @@ interface ITask {
 function App(): JSX.Element {
   const [newTask, setNewTask] = useState<string>("");
   const [tasks, setTasks] = useState<ITask[]>([]);
+  const taskInput = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: FormElement) => {
     e.preventDefault();
     addTask(newTask);
     setNewTask("");
-    console.log(tasks);
+    taskInput.current?.focus();
   };
 
-  const addTask = (name: string) => {
+  const addTask = (name: string): void => {
     const newTask: ITask[] = [...tasks, { name, completed: false }];
     setTasks(newTask);
   };
-  console.log(tasks);
+
+  const changeStatus = (i: number): void => {
+    const newTask: ITask[] = [...tasks];
+    newTask[i].completed = !newTask[i].completed;
+    setTasks(newTask);
+  };
+
+  const deleteTask = (i: number): void => {
+    const newTask: ITask[] = [...tasks];
+    newTask.splice(i, 1);
+    setTasks(newTask);
+  };
   return (
     <div className="container-md p-4">
       <div className="row">
@@ -36,15 +48,37 @@ function App(): JSX.Element {
                   placeholder="Agregar Tarea"
                   value={newTask}
                   className="form-control"
+                  ref={taskInput}
+                  autoFocus
                 />
-                <button className="btn btn-primary">Guardar</button>
+                <button className="btn btn-success btn-block mt-2">
+                  Guardar
+                </button>
               </form>
             </div>
           </div>
 
-          {tasks.map((t: ITask, i: number) => {
-            return <h1 key={i}>{t.name}</h1>;
-          })}
+          {tasks.map((t: ITask, i: number) => (
+            <div className="card card-body mt-2" key={i}>
+              <h4 style={{ textDecoration: t.completed ? "line-through" : "" }}>
+                {t.name}
+              </h4>
+              <div>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => changeStatus(i)}
+                >
+                  {t.completed ? "x" : "✓"}
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => deleteTask(i)}
+                >
+                  🗑
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
