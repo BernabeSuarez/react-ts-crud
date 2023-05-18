@@ -37,6 +37,7 @@ function App(): JSX.Element {
   };
   return (
     <div className="container-md p-4">
+      <h2>ToDo List React + Ts</h2>
       <div className="row">
         <div className="col-md-6 offset-md-3">
           <div className="card">
