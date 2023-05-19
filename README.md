@@ -1,4 +1,4 @@
-## React ToDo list con Typescript
+## React ToDo list con TypeScript
 
 ### Aplicacion de lista de tareas
 
